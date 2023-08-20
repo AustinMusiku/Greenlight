@@ -13,7 +13,8 @@ func (app *application) routes() *httprouter.Router {
 	// http.MethodPost are constants which equate to the strings "GET" and "POST"
 	router.GET("/v1/healthcheck", app.healthcheckHandler)
 
-	// TODO: Add a new route for the /v1/movies and /v1/movies/:id endpoints.
+	router.POST("/v1/movies", app.createMovieHandler)
+	// TODO: Add a new route for /v1/movies/:id endpoint.
 
 	// Return the httprouter instance.
 	return router
