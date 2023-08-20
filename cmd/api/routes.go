@@ -14,7 +14,7 @@ func (app *application) routes() *httprouter.Router {
 	router.GET("/v1/healthcheck", app.healthcheckHandler)
 
 	router.POST("/v1/movies", app.createMovieHandler)
-	// TODO: Add a new route for /v1/movies/:id endpoint.
+	router.GET("/v1/movies/:id", app.showMovieHandler)
 
 	// Return the httprouter instance.
 	return router
