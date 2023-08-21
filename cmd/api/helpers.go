@@ -2,7 +2,11 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
+	"strconv"
+
+	"github.com/julienschmidt/httprouter"
 )
 
 // helper for sending JSON responses. This takes:
@@ -30,4 +34,18 @@ func (app *application) WriteJson(w http.ResponseWriter, status int, data interf
 	w.Write(js)
 
 	return nil
+}
+
+// Retrieve the "id" URL parameter from the current request context, then convert it to
+// an integer and return it. If the operation isn't successful, return 0 and an error.
+func (app *application) readIDParam(ps httprouter.Params) (int64, error) {
+	idParam := ps.ByName("id")
+
+	id, err := strconv.ParseInt(idParam, 10, 64)
+
+	if err != nil || id < 1 {
+		return 0, errors.New("invalid id parameter")
+	}
+
+	return id, nil
 }
