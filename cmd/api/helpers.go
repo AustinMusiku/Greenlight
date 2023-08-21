@@ -16,7 +16,7 @@ type envelope map[string]interface{}
 // HTTP status code to send,
 // data to encode to JSON,
 // header map containing any additional HTTP headers we want to include in the response.
-func (app *application) WriteJson(w http.ResponseWriter, status int, data envelope, headers http.Header) error {
+func (app *application) writeJSON(w http.ResponseWriter, status int, data envelope, headers http.Header) error {
 	js, err := json.MarshalIndent(data, "", "\t")
 	if err != nil {
 		return err
