@@ -2,6 +2,7 @@ package data
 
 import (
 	"database/sql"
+	"errors"
 	"time"
 
 	"github.com/AustinMusiku/Greenlight/internal/validator"
@@ -35,9 +36,45 @@ func (m MovieModel) Insert(movie *Movie) error {
 	return m.DB.QueryRow(query, args...).Scan(&movie.ID, &movie.CreatedAt, &movie.Version)
 }
 
-// Placeholder method for fetching a specific record from the movies table.
+// Fetching a specific record from the movies table.
 func (m MovieModel) Get(id int64) (*Movie, error) {
-	return nil, nil
+	// Since bigserial columns always start at 1, avoid an unnecessary database call,
+	// and return an ErrRecordNotFound error for ID values less than 1
+	if id < 1 {
+		return nil, ErrRecordNotFound
+	}
+
+	query := `
+		SELECT id, created_at, title, year, runtime, genres, version
+		FROM movies
+		WHERE id = $1`
+
+	// Declare a Movie struct to hold the data returned by the query.
+	var movie Movie
+
+	err := m.DB.QueryRow(query, id).Scan(
+		&movie.ID,
+		&movie.CreatedAt,
+		&movie.Title,
+		&movie.Year,
+		&movie.Runtime,
+		pq.Array(&movie.Genres),
+		&movie.Version,
+	)
+
+	// If there was no matching movie found, Scan() will return a sql.ErrNoRows error.
+	if err != nil {
+		switch {
+		case errors.Is(err, sql.ErrNoRows):
+			return nil, ErrRecordNotFound
+		default:
+			return nil, err
+		}
+	}
+
+	// Otherwise, return a pointer to the Movie struct.
+	return &movie, nil
+
 }
 
 // Placeholder method for updating a specific record in the movies table.
