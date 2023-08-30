@@ -113,7 +113,6 @@ func (app *application) createMovieHandler(w http.ResponseWriter, r *http.Reques
 func (app *application) showMovieHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	id, err := app.readIDParam(ps)
 	if err != nil { // invalid id parameter
-		app.logger.Println(err)
 		http.NotFound(w, r)
 		return
 	}
@@ -140,7 +139,6 @@ func (app *application) showMovieHandler(w http.ResponseWriter, r *http.Request,
 func (app *application) updateMovieHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	id, err := app.readIDParam(ps)
 	if err != nil { // invalid id parameter
-		app.logger.Println(err)
 		http.NotFound(w, r)
 		return
 	}
