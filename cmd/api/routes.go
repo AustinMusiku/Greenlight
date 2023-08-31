@@ -17,14 +17,20 @@ func (app *application) routes() http.Handler {
 
 	// Register the relevant methods, URL patterns and handler functions for our
 	// endpoints using the HandlerFunc() method.
+
+	// healthcheck route
 	router.GET("/v1/healthcheck", app.healthcheckHandler)
 
+	// movie routes
 	router.GET("/v1/movies", app.listMoviesHandler)
 	router.POST("/v1/movies", app.createMovieHandler)
 
 	router.GET("/v1/movies/:id", app.showMovieHandler)
 	router.PATCH("/v1/movies/:id", app.updateMovieHandler)
 	router.DELETE("/v1/movies/:id", app.deleteMovieHandler)
+
+	// user routes
+	router.POST("/v1/users", app.registerUserHandler)
 
 	return app.recoverPanic(app.rateLimit(router))
 }
