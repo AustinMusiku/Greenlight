@@ -25,6 +25,14 @@ type User struct {
 	Version   int       `json:"-"`
 }
 
+// Declare a new AnonymousUser variable.
+var AnonymousUser = &User{}
+
+// Check if a User instance is the AnonymousUser.
+func (u *User) IsAnonymous() bool {
+	return u == AnonymousUser
+}
+
 // Create a custom password type which is a struct containing the plaintext and hashed
 // versions of the password for a user. The plaintext field is a *pointer* to a string,
 // so that we're able to distinguish between a plaintext password not being present in
