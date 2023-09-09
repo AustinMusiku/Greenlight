@@ -9,6 +9,7 @@ require (
 )
 
 require (
+	github.com/felixge/httpsnoop v1.0.1
 	github.com/go-mail/mail/v2 v2.3.0
 	golang.org/x/crypto v0.12.0
 )
