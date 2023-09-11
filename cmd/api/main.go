@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"expvar"
 	"flag"
+	"fmt"
 	"os"
 	"runtime"
 	"strings"
@@ -17,8 +18,10 @@ import (
 	_ "github.com/lib/pq"
 )
 
-// global constant(hard-coded for now) specifying the application version number.
-const version = "1.0.0"
+var (
+	buildTime string
+	version   string
+)
 
 // Configuration settings for our application.
 // We will read in these configuration settings from
@@ -89,6 +92,20 @@ func main() {
 		cfg.cors.trustedOrigins = strings.Fields(val)
 		return nil
 	})
+
+	// Create a new version boolean flag with the default value of false.
+	displayVersion := flag.Bool("version", false, "Display version and exit")
+
+	flag.Parse()
+
+	// If the version flag value is true, then print out the version number and
+	// immediately exit.
+	if *displayVersion {
+		fmt.Printf("Version:\t%s\n", version)
+		fmt.Printf("Build time:\t%s\n", buildTime)
+		os.Exit(0)
+
+	}
 
 	flag.Parse()
 
