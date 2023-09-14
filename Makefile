@@ -79,3 +79,12 @@ production/connect:
 production/deploy/api:
 	rsync -e "ssh -i ${PRIVATE_KEY_PATH}" -rP --delete ./bin/linux_amd64/api ./migrations greenlight@${PRODUCTION_HOST_IP}:~
 	ssh -t -i ${PRIVATE_KEY_PATH} greenlight@${PRODUCTION_HOST_IP} 'migrate -path ~/migrations -database $$GREENLIGHT_DB_DSN up'
+
+## production/configure/api.service: configure the production systemd api.service file
+.PHONY: production/configure/api.service
+production/configure/api.service:
+	rsync -e "ssh -i ${PRIVATE_KEY_PATH}" -P ./remote/production/api.service greenlight@${PRODUCTION_HOST_IP}:~
+	ssh -t -i ${PRIVATE_KEY_PATH} greenlight@${PRODUCTION_HOST_IP} '\
+		sudo mv ~/api.service /etc/systemd/system/ \
+		&& sudo systemctl enable api \
+		&& sudo systemctl restart api \'
