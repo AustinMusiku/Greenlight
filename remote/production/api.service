@@ -1,0 +1,25 @@
+[Unit]
+Description=Greenlight API service
+
+After=postgresql.service
+After=network-online.target
+Wants=network-online.target
+
+StartLimitIntervalSec=600
+StartLimitBurst=5
+
+[Service]
+Type=exec
+User=greenlight
+Group=greenlight
+EnvironmentFile=/etc/environment
+WorkingDirectory=/home/greenlight
+ExecStart=/home/greenlight/api -port=4000 -db-dsn=${GREENLIGHT_DB_DSN} -env=production -smtp-host=${SMTP_HOST} -smtp-username=${SMTP_USERNAME} -smtp-password=${SMTP_PASSWORD}
+
+Restart=on-failure
+RestartSec=5
+
+[Install]
+# Start the service automatically at boot time (the 'multi-user.target' describes a boot
+# state when the system will accept logins).
+WantedBy=multi-user.target
